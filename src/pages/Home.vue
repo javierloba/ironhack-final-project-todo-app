@@ -1,23 +1,16 @@
 <template>
-  <section v-if="appReady" class="min-h-full box-border">
-    <Navigation />
-    <router-view class="app-main" />
-  </section>
+  <div>Soy la home</div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { supabase } from "./supabase";
 import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
-import { useUserStore } from "./store/user.js";
-import Navigation from "./components/Navigation.vue";
+import { useUserStore } from "../store/user.js";
 
 const router = useRouter();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
-const appReady = ref(null);
 
 onMounted(async () => {
   try {
@@ -25,7 +18,6 @@ onMounted(async () => {
     if (!user.value) {
       // redirect them to logout if the user is not there
       router.push({ path: "/login" });
-      appReady.value = true;
     } else {
       // continue to dashboard
       router.push({ path: "/" });
@@ -33,10 +25,5 @@ onMounted(async () => {
   } catch (e) {
     console.log(e);
   }
-});
-
-supabase.auth.onAuthStateChange((_, session) => {
-  userStore.setUser(session);
-  appReady.value = true;
 });
 </script>
