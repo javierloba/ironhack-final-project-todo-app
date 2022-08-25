@@ -85,45 +85,38 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
-import { supabase } from "../supabase";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "../store/user.js";
 import { useRouter } from "vue-router";
+import { supabase } from "../supabase";
 
-export default {
-  name: "signup",
-  setup() {
-    const router = useRouter();
-    const email = ref(null);
-    const password = ref(null);
-    const confirmPassword = ref(null);
-    const errorMsg = ref(null);
+const router = useRouter();
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+const email = ref(null);
+const password = ref(null);
+const confirmPassword = ref(null);
+const errorMsg = ref(null);
 
-    const register = async () => {
-      if (password.value === confirmPassword.value) {
-        try {
-          const { error } = await supabase.auth.signUp({
-            email: email.value,
-            password: password.value,
-          });
-          if (error) throw error;
-          router.push({ name: "Login" });
-        } catch (error) {
-          errorMsg.value = error.message;
-          setTimeout(() => {
-            errorMsg.value = null;
-          }, 5000);
-        }
-        return;
-      }
-      errorMsg.value = "Error: Password do not match";
+const register = async () => {
+  if (password.value === confirmPassword.value) {
+    try {
+      await userStore.signUp(email.value, password.value, errorMsg.value);
+      router.push({ name: "Login" });
+    } catch (error) {
+      errorMsg.value = error.message;
       setTimeout(() => {
         errorMsg.value = null;
       }, 5000);
-    };
-
-    return { email, password, confirmPassword, errorMsg, register };
-  },
+    }
+    return;
+  }
+  errorMsg.value = "Error: Password do not match";
+  setTimeout(() => {
+    errorMsg.value = null;
+  }, 5000);
 };
 </script>
 

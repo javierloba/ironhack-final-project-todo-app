@@ -15,65 +15,48 @@
         v-if="statusMsg || errorMsg"
         class="mb-10 p-4 bg-light-grey rounded-md shadow-lg"
       >
-        <p class="text-at-light-green">
+        <p class="text-green-500">
           {{ statusMsg }}
         </p>
         <p class="text-red-500">{{ errorMsg }}</p>
       </div>
 
       <section class="mt-10">
-        <form
-          @submit.prevent="createTodo"
-          class="flex flex-col"
-        >
-        <!-- Name -->
+        <form @submit.prevent="createTodo" class="flex flex-col">
+          <!-- Name -->
           <div class="mb-6 pt-3 rounded bg-gray-200">
             <label
               class="block text-gray-700 text-sm font-bold mb-2 ml-3"
               for="todo-name"
-              >To-do name</label
+              >Title</label
             >
             <input
               required
               type="text"
               id="todo-name"
-              v-model="todoName"
+              v-model="title"
               class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
             />
           </div>
-          <!-- Message -->
-          <div class="mb-6 pt-3 rounded bg-gray-200">
-            <label
-              class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-              for="todo-text"
-              >To-do message</label
-            >
-            <input
-              required
-              type="text"
-              id="todo-message"
-              v-model="todoText"
-              class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
-            />
-          </div>
+
           <!-- State -->
           <div class="mb-6 pt-3 rounded bg-gray-200">
             <label
               class="block text-gray-700 text-sm font-bold mb-2 ml-3"
               for="todo-text"
-              >To-do state</label
+              >State</label
             >
             <select
               required
               id="todo-state"
-              v-model="todoState"
+              v-model="is_complete"
               class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
             >
-              <option value="select-state">Select state</option>
-              <option value="in-progress">In progress</option>
-              <option value="completed">Completed</option>
-              <option value="not-started">Not started</option>
-              <option value="blocked">Blocked</option>
+              <option value="select-state" disabled selected hidden>
+                Select state
+              </option>
+              <option value="false">In progress</option>
+              <option value="true">Completed</option>
             </select>
           </div>
 
@@ -89,20 +72,42 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useTaskStore } from "../store/task";
 
-export default {
-  name: "create",
-  setup() {
-    const todoName = ref("");
-    const todoText = ref("");
-    const todoState = ref("select-state");
-    const statusMsg = ref(null);
-    const errorMsg = ref(null);
+const router = useRouter();
+const taskStore = useTaskStore();
+const { task } = storeToRefs(taskStore);
 
-    return { todoName, todoState, todoText, statusMsg, errorMsg };
-  },
+const title = ref("");
+const is_complete = ref("select-state");
+const statusMsg = ref(null);
+const errorMsg = ref(null);
+const token = JSON.parse(localStorage.getItem('supabase.auth.token'))
+console.log(token.currentSession.user.id)
+const user_id = ref(token.currentSession.user.id)
+
+const createTodo = async () => {
+  try {
+    await taskStore.insertTodo(title.value, is_complete.value, user_id.value);
+    statusMsg.value = "Succes: To-do created!";
+    title.value = "";
+    is_complete.value = "select-state";
+    setTimeout(() => {
+      statusMsg.value = false;
+    }, 5000);
+    setTimeout(() => {
+      router.push({ name: "Home" });
+    }, 1000);
+  } catch (error) {
+    errorMsg.value = `Error: ${error.message}`;
+    setTimeout(() => {
+      errorMsg.value = false;
+    }, 5000);
+  }
 };
 </script>
 

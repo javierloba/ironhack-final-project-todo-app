@@ -35,7 +35,7 @@ onMounted(async () => {
   }
 });
 
-supabase.auth.onAuthStateChange((_, session) => {
+supabase.auth.onAuthStateChange((event, session) => {
   userStore.setUser(session);
   appReady.value = true;
 });

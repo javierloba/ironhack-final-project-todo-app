@@ -76,37 +76,33 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
-import { supabase } from "../supabase";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "../store/user.js";
 import { useRouter } from "vue-router";
+import { supabase } from "../supabase";
 
-export default {
-  name: "login",
-  setup() {
-    const router = useRouter();
-    const email = ref(null);
-    const password = ref(null);
-    const errorMsg = ref(null);
+const router = useRouter();
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+const email = ref(null);
+const password = ref(null);
+const errorMsg = ref(null);
 
-    const login = async () => {
-      try {
-        const { error } = await supabase.auth.signIn({
-          email: email.value,
-          password: password.value,
-        });
-        if (error) throw error;
-        router.push({ name: "Home" });
-      } catch (error) {
-        errorMsg.value = `Error: ${error.message}`;
-        setTimeout(() => {
-          errorMsg.value = null;
-        }, 5000);
-      }
-    };
-
-    return { email, password, errorMsg, login };
-  },
+const login = async () => {
+  try {
+    await userStore.singIn(email.value, password.value, errorMsg.value);
+    router.push({ name: "Home" });
+    supabase.auth.onAuthStateChange((event, session) => {
+      userStore.setUser(session);
+    });
+  } catch (error) {
+    errorMsg.value = `Error: ${error.message}`;
+    setTimeout(() => {
+      errorMsg.value = null;
+    }, 5000);
+  }
 };
 </script>
 
