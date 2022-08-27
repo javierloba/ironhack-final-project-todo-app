@@ -3,7 +3,6 @@ import Home from "../pages/Home.vue";
 import Login from "../pages/Login.vue";
 import Signup from "../pages/Signup.vue";
 import Create from "../pages/Create.vue";
-import ViewTodo from "../pages/ViewTodo.vue";
 
 const routes = [
   {
@@ -40,15 +39,6 @@ const routes = [
     meta: {
       title: "Create",
       auth: true,
-    },
-  },
-  {
-    path: "/view-todo/:todoId",
-    name: "View-todo",
-    component: ViewTodo,
-    meta: {
-      title: "View Todo",
-      auth: false,
     },
   },
 ];

@@ -87,7 +87,6 @@ const is_complete = ref("select-state");
 const statusMsg = ref(null);
 const errorMsg = ref(null);
 const token = JSON.parse(localStorage.getItem('supabase.auth.token'))
-console.log(token.currentSession.user.id)
 const user_id = ref(token.currentSession.user.id)
 
 const createTodo = async () => {
