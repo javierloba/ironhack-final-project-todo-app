@@ -5,9 +5,9 @@ import router from "./router/index";
 import { createPinia } from "pinia";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faTrash, faPenToSquare, faCircleCheck, faHourglassStart } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPenToSquare, faCircleCheck, faHourglassStart, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faTrash, faPenToSquare, faCircleCheck, faHourglassStart);
+library.add(faTrash, faPenToSquare, faCircleCheck, faHourglassStart, faCircleXmark);
 
 const pinia = createPinia();
 

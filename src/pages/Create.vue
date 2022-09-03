@@ -7,7 +7,7 @@
       class="bg-white max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl"
     >
       <section>
-        <h3 class="font-bold text-2xl">Create To-Do</h3>
+        <h3 class="font-bold text-2xl">Create Task</h3>
       </section>
 
       <!-- Status Message -->
@@ -35,6 +35,7 @@
               type="text"
               id="todo-name"
               v-model="title"
+              maxlength="40"
               class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
             />
           </div>
@@ -92,7 +93,7 @@ const user_id = ref(token.currentSession.user.id)
 const createTodo = async () => {
   try {
     await taskStore.insertTodo(title.value, is_complete.value, user_id.value);
-    statusMsg.value = "Succes: To-do created!";
+    statusMsg.value = "Succes: Task created!";
     title.value = "";
     is_complete.value = "select-state";
     setTimeout(() => {

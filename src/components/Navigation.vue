@@ -2,7 +2,7 @@
   <header class="bg-purple-700 text-white">
     <nav class="py-5 px-4 flex flex-col gap-4 items-center sm:flex-row">
       <div class="flex items-center gap-x-4">
-        <h1 class="text-lg">To-do App</h1>
+        <h1 class="text-lg">Tasks App</h1>
       </div>
       <ul v-if="user" class="flex flex-1 justify-end gap-x-10">
         <router-link class="cursor-pointer" :to="{ name: 'Home' }"
