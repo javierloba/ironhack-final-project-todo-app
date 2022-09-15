@@ -33,6 +33,7 @@ export const useTaskStore = defineStore("tasks", {
       .from('tasks')
       .update({ title: title, is_complete: is_complete })
       .match({id: taskId})
+      this.fetchTasks()
     },
     // Hacer el delete
     async deleteTodo(taskId) {
@@ -40,6 +41,7 @@ export const useTaskStore = defineStore("tasks", {
       .from('tasks')
       .delete()
       .match({id: taskId})
+      this.fetchTasks()
     },
   },
 });
